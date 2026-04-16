@@ -108,8 +108,6 @@ app = FastAPI(
     version="1.0.0"
 )
 # 1. Make sure you are in the project folder
-cd ~/Desktop/Agentpay
-
 # 2. Add everything again just to be safe
 git add .
 
