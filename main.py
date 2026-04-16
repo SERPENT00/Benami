@@ -109,8 +109,6 @@ app = FastAPI(
 )
 # 1. Make sure you are in the project folder
 # 2. Add everything again just to be safe
-git add .
-
 # 3. Create a "Force Launch" commit
 git commit -m "🚀 DEPLOY: Benami Production V1.0"
 
