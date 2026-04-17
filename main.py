@@ -10,7 +10,7 @@ load_dotenv()
 app = FastAPI(title="Benami Secure API")
 
 # 1. SECURITY CONFIG
-# This looks for the BENAMI_API_KEY you set in Render's Environment Variables
+# This pulls 'Serpent@62' from your Render Dashboard Environment Variables
 API_KEY = os.getenv("BENAMI_API_KEY")
 API_KEY_NAME = "access_token"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
@@ -20,7 +20,8 @@ async def verify_key(header_value: str = Security(api_key_header)):
         return header_value
     raise HTTPException(status_code=403, detail="Unauthorized: Invalid Vault Key")
 
-# 2. SUPABASE CONNECTION
+# 2. SUPABASE CONNECTION (FIXED)
+# We pull these from Environment Variables for security
 supabase: Client = create_client(
     os.getenv("SUPABASE_URL"), 
     os.getenv("SUPABASE_KEY")
@@ -53,7 +54,7 @@ async def process_payment(req: PaymentRequest, token: str = Depends(verify_key))
     new_balance = current_balance - req.amount
     supabase.table("wallets").update({"balance": new_balance}).eq("id", req.wallet_id).execute()
     
-    # D. Log the transaction for your billionaire audit trail
+    # D. Log the transaction
     supabase.table("transactions").insert({
         "wallet_id": req.wallet_id,
         "amount": req.amount,
@@ -66,3 +67,16 @@ async def process_payment(req: PaymentRequest, token: str = Depends(verify_key))
         "remaining_balance": new_balance,
         "note": req.description
     }
+import os
+from fastapi import FastAPI
+import uvicorn
+
+app = FastAPI()
+
+# ... (your existing @app.get and @app.post routes here) ...
+
+if __name__ == "__main__":
+    # Render provides the PORT as an environment variable
+    port = int(os.environ.get("PORT", 10000))
+    # Bind to 0.0.0.0 so it's accessible externally
+    uvicorn.run(app, host="0.0.0.0", port=port)
