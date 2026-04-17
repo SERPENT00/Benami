@@ -6,7 +6,8 @@ from google.genai import types
 # 1. YOUR SECURE CREDENTIALS (CONNECTED)
 # ==========================================
 # WARNING: If this key gives a 403 error, generate a new one in AI Studio.
-GEMINI_API_KEY = "AQ.Ab8RN6KU4yKaov_cfpbnJgnmYym20Fb_2VJ3_iQFXS6NkR76hg"
+import os
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 WALLET_ID = "9c944276-46a8-465a-8d60-20338a232ff1"
 
 # Must match the BENAMI_API_KEY in your Render environment settings
